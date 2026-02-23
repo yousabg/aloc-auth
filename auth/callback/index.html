@@ -1,140 +1,129 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Aloc — Email Confirmed</title>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Aloc — Email Confirmed</title>
 
-    <style>
-      :root {
-        --background: #f6f1ed;
-        --brown: #3a2a23;
-        --card: #ffffff;
-        --muted: rgba(58, 42, 35, 0.75);
-        --shadow: 0 20px 45px rgba(0, 0, 0, 0.12);
-      }
+  <style>
+    :root {
+      --background: #f6f1ed;
+      --brown: #3a2a23;
+      --card: #ffffff;
+      --muted: rgba(58, 42, 35, 0.75);
+      --shadow: 0 20px 45px rgba(0, 0, 0, 0.12);
+    }
 
-      * {
-        box-sizing: border-box;
-      }
+    * {
+      box-sizing: border-box;
+    }
 
-      body {
-        margin: 0;
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
-        background: var(--background);
-        display: grid;
-        place-items: center;
-        min-height: 100vh;
-        padding: 24px;
-      }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      background: var(--background);
+      display: grid;
+      place-items: center;
+      min-height: 100vh;
+      padding: 24px;
+    }
 
-      .card {
-        width: 100%;
-        max-width: 520px;
-        background: var(--card);
-        border-radius: 22px;
-        overflow: hidden;
-        box-shadow: var(--shadow);
-        border: 1px solid rgba(0, 0, 0, 0.06);
-      }
+    .card {
+      width: 100%;
+      max-width: 520px;
+      background: var(--card);
+      border-radius: 22px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(0, 0, 0, 0.06);
+    }
 
-      .header {
-        background: var(--brown);
-        padding: 26px;
-        display: flex;
-        align-items: center;
-        gap: 16px;
-      }
+    .header {
+      background: var(--brown);
+      padding: 28px;
+      display: flex;
+      align-items: center;
+      gap: 18px;
+    }
 
-      .logoBox {
-        width: 60px;
-        height: 60px;
-        border-radius: 18px;
-        background: var(--brown);
-        display: grid;
-        place-items: center;
-        border: 1px solid rgba(255, 255, 255, 0.2);
-      }
+    .logoBox {
+      width: 64px;
+      height: 64px;
+      border-radius: 18px;
+      background: var(--brown);
+      display: grid;
+      place-items: center;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
 
-      .logoBox img {
-        width: 36px;
-        height: 36px;
-        object-fit: contain;
-      }
+    .logoBox img {
+      width: 38px;
+      height: 38px;
+      object-fit: contain;
+    }
 
-      .brand {
-        color: white;
-      }
+    .brand {
+      color: white;
+    }
 
-      .brand .name {
-        font-weight: 900;
-        font-size: 20px;
-        letter-spacing: 0.2px;
-      }
+    .brand .name {
+      font-weight: 900;
+      font-size: 20px;
+      letter-spacing: 0.2px;
+    }
 
-      .brand .sub {
-        margin-top: 4px;
-        font-weight: 700;
-        font-size: 12px;
-        opacity: 0.85;
-      }
+    .brand .sub {
+      margin-top: 4px;
+      font-weight: 700;
+      font-size: 12px;
+      opacity: 0.85;
+    }
 
-      .body {
-        padding: 28px;
-      }
+    .body {
+      padding: 32px;
+    }
 
-      h1 {
-        margin: 0 0 12px;
-        font-size: 24px;
-        font-weight: 900;
-        color: var(--brown);
-        letter-spacing: 0.2px;
-      }
+    h1 {
+      margin: 0 0 14px;
+      font-size: 24px;
+      font-weight: 900;
+      color: var(--brown);
+      letter-spacing: 0.2px;
+    }
 
-      p {
-        margin: 0;
-        font-size: 15px;
-        line-height: 1.5;
-        color: var(--muted);
-        font-weight: 600;
-      }
+    p {
+      margin: 0;
+      font-size: 15px;
+      line-height: 1.6;
+      color: var(--muted);
+      font-weight: 600;
+    }
+  </style>
+</head>
 
-      .pill {
-        margin-top: 18px;
-        display: inline-block;
-        padding: 10px 14px;
-        border-radius: 999px;
-        background: rgba(58, 42, 35, 0.08);
-        color: var(--brown);
-        font-weight: 800;
-        font-size: 13px;
-      }
-    </style>
-  </head>
-
-  <body>
-    <div class="card">
-      <div class="header">
-        <div class="logoBox">
-          <!-- Put your white logo file in the same folder -->
-          <img src="./aloc-logo.png" alt="Aloc Logo" />
-        </div>
-        <div class="brand">
-          <div class="name">Aloc</div>
-          <div class="sub">Email Confirmation</div>
-        </div>
+<body>
+  <div class="card">
+    <div class="header">
+      <div class="logoBox">
+        <img 
+          src="https://bvsakonhetotdogbnnhh.supabase.co/storage/v1/object/public/images/icon.png" 
+          alt="Aloc Logo"
+        />
       </div>
-
-      <div class="body">
-        <h1>You’re confirmed ✅</h1>
-        <p>
-          Your email has been successfully verified.
-          <br /><br />
-          You can now return to the Aloc app and log in.
-        </p>
-
-        <div class="pill">All set 🎉</div>
+      <div class="brand">
+        <div class="name">Aloc</div>
+        <div class="sub">Email Confirmation</div>
       </div>
     </div>
-  </body>
+
+    <div class="body">
+      <h1>You’re confirmed ✅</h1>
+      <p>
+        Your email has been successfully verified.
+        <br /><br />
+        You can now return to the Aloc app and log in.
+      </p>
+    </div>
+  </div>
+</body>
 </html>
