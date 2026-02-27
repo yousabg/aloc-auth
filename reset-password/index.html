@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Aloc — Reset Password</title>
   <link rel="icon" type="image/png" href="https://bvsakonhetotdogbnnhh.supabase.co/storage/v1/object/public/images/icon.png" sizes="32x32" />
+  <link rel="shortcut icon" href="https://bvsakonhetotdogbnnhh.supabase.co/storage/v1/object/public/images/icon.png" />
   <style>
     :root {
       --background: #f6f1ed;
@@ -29,28 +30,36 @@
       padding: 24px;
     }
     .card {
-      width: 100%; max-width: 520px; background: var(--card);
-      border-radius: 22px; overflow: hidden;
-      box-shadow: var(--shadow); border: 1px solid rgba(0,0,0,0.06);
+      width: 100%;
+      max-width: 520px;
+      background: var(--card);
+      border-radius: 22px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(0, 0, 0, 0.06);
     }
     .header {
-      background: var(--brown); padding: 28px;
-      display: flex; align-items: center; gap: 18px;
+      background: var(--brown);
+      padding: 28px;
+      display: flex;
+      align-items: center;
+      gap: 18px;
     }
     .logoBox {
       width: 64px; height: 64px; border-radius: 18px;
       background: var(--brown); display: grid; place-items: center;
-      border: 1px solid rgba(255,255,255,0.2);
+      border: 1px solid rgba(255, 255, 255, 0.2);
     }
     .logoBox img { width: 38px; height: 38px; object-fit: contain; }
     .brand { color: white; }
-    .brand .name { font-weight: 900; font-size: 20px; }
+    .brand .name { font-weight: 900; font-size: 20px; letter-spacing: 0.2px; }
     .brand .sub { margin-top: 4px; font-weight: 700; font-size: 12px; opacity: 0.85; }
     .body { padding: 32px; }
-    h1 { margin: 0 0 10px; font-size: 24px; font-weight: 900; color: var(--brown); }
+    h1 { margin: 0 0 10px; font-size: 24px; font-weight: 900; color: var(--brown); letter-spacing: 0.2px; }
     p.lead { margin: 0 0 26px; font-size: 15px; line-height: 1.6; color: var(--muted); font-weight: 600; }
+
     .inputWrap {
-      display: flex; align-items: center;
+      position: relative; display: flex; align-items: center;
       background: var(--input-bg); border: 1px solid var(--border);
       border-radius: 14px; padding: 0 14px; height: 54px;
       margin-bottom: 14px; transition: border-color 0.15s;
@@ -66,39 +75,39 @@
     .toggleBtn {
       background: none; border: none; cursor: pointer;
       padding: 6px 0 6px 12px; display: grid; place-items: center;
-      opacity: 0.55;
+      opacity: 0.55; transition: opacity 0.15s;
     }
+    .toggleBtn:hover { opacity: 0.9; }
     .helper { font-size: 12px; font-weight: 700; color: var(--error); margin: -8px 0 14px 4px; min-height: 16px; }
+
     .submitBtn {
       width: 100%; height: 54px; border-radius: 14px;
       background: var(--brown); color: #fff; border: none;
       font-family: inherit; font-size: 17px; font-weight: 900;
-      cursor: pointer; margin-top: 6px; transition: opacity 0.15s;
+      letter-spacing: 0.3px; cursor: pointer; margin-top: 6px;
+      transition: opacity 0.15s;
     }
     .submitBtn:hover:not(:disabled) { opacity: 0.88; }
     .submitBtn:disabled { opacity: 0.5; cursor: default; }
+
     .panel { display: none; }
     .panel.active { display: block; }
+
     .successIcon {
       width: 64px; height: 64px; border-radius: 50%;
-      background: rgba(46,125,82,0.1);
+      background: rgba(46, 125, 82, 0.1);
       display: grid; place-items: center; margin: 0 auto 18px;
     }
     .successTitle { font-size: 24px; font-weight: 900; color: var(--brown); margin: 0 0 10px; text-align: center; }
     .successMsg { font-size: 15px; line-height: 1.6; color: var(--muted); font-weight: 600; text-align: center; margin: 0; }
+
     .errorBanner {
-      background: rgba(200,60,60,0.08); border: 1px solid rgba(200,60,60,0.2);
+      background: rgba(200, 60, 60, 0.08); border: 1px solid rgba(200, 60, 60, 0.2);
       border-radius: 12px; padding: 12px 14px; font-size: 13px; font-weight: 700;
       color: var(--error); margin-bottom: 18px; display: none;
     }
     .errorBanner.visible { display: block; }
     .invalidMsg { font-size: 15px; line-height: 1.6; color: var(--muted); font-weight: 600; margin: 0; }
-    /* debug box */
-    #debugBox {
-      margin-top: 18px; padding: 12px; background: #f0e8e3;
-      border-radius: 10px; font-size: 11px; font-family: monospace;
-      color: #3a2a23; line-height: 1.6; word-break: break-all;
-    }
   </style>
 </head>
 <body>
@@ -115,41 +124,48 @@
 
     <div class="body">
 
+      <!-- Loading -->
       <div class="panel active" id="panelLoading">
-        <p style="color:var(--muted);font-weight:600;font-size:15px;margin:0 0 12px;">Verifying your link…</p>
-        <div id="debugBox">Loading…</div>
+        <p style="color:var(--muted);font-weight:600;font-size:15px;margin:0;">Verifying your link…</p>
       </div>
 
+      <!-- Form -->
       <div class="panel" id="panelForm">
         <h1>Choose a new password</h1>
         <p class="lead">Enter a new password for your Aloc account.</p>
+
         <div class="errorBanner" id="errorBanner"></div>
+
         <div class="inputWrap">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#3a2a23" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
           </svg>
           <input type="password" id="password" placeholder="New password" autocomplete="new-password" />
-          <button class="toggleBtn" type="button" onclick="toggleVisibility('password')">
+          <button class="toggleBtn" type="button" onclick="toggleVisibility('password')" aria-label="Toggle password">
             <svg id="eyePassword" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#3a2a23" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
             </svg>
           </button>
         </div>
+
         <div class="inputWrap">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#3a2a23" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
           </svg>
           <input type="password" id="confirmPassword" placeholder="Confirm password" autocomplete="new-password" oninput="checkMismatch()" />
-          <button class="toggleBtn" type="button" onclick="toggleVisibility('confirmPassword')">
+          <button class="toggleBtn" type="button" onclick="toggleVisibility('confirmPassword')" aria-label="Toggle confirm password">
             <svg id="eyeConfirm" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#3a2a23" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
             </svg>
           </button>
         </div>
         <div class="helper" id="mismatchHelper"></div>
+
         <button class="submitBtn" id="submitBtn" onclick="handleSubmit()">Reset Password</button>
       </div>
 
+      <!-- Success -->
       <div class="panel" id="panelSuccess">
         <div class="successIcon">
           <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#2e7d52" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
@@ -160,10 +176,10 @@
         <p class="successMsg">Your password has been reset successfully.<br /><br />You can now return to the Aloc app and log in with your new password.</p>
       </div>
 
+      <!-- Invalid -->
       <div class="panel" id="panelInvalid">
         <h1>Link expired</h1>
         <p class="invalidMsg">This password reset link is invalid or has expired. Please go back to the app and request a new one.</p>
-        <div id="debugBox2" style="margin-top:18px;padding:12px;background:#f0e8e3;border-radius:10px;font-size:11px;font-family:monospace;color:#3a2a23;line-height:1.6;word-break:break-all;"></div>
       </div>
 
     </div>
@@ -172,29 +188,17 @@
   <script type="module">
     import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
 
-    const EXPO_PUBLIC_SUPABASE_URL="https://bvsakonhetotdogbnnhh.supabase.co"
-    const EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY="sb_publishable_DqDgzOahi7ExN8Y44UFfXw_lVhaRK58"
+    const EXPO_PUBLIC_SUPABASE_URL = "https://bvsakonhetotdogbnnhh.supabase.co";
+    const EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY = "sb_publishable_DqDgzOahi7ExN8Y44UFfXw_lVhaRK58";
 
     const supabase = createClient(EXPO_PUBLIC_SUPABASE_URL, EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY, {
       auth: { detectSessionFromUrl: false }
     });
 
-    const debug = (msg) => {
-      console.log(msg);
-      const box = document.getElementById("debugBox");
-      if (box) box.innerHTML += "<br>" + msg;
-    };
-
-    function showPanel(id, reason) {
-      console.log("showPanel:", id, reason ?? "");
+    function showPanel(id) {
       document.querySelectorAll(".panel").forEach(p => p.classList.remove("active"));
       document.getElementById(id).classList.add("active");
-      if (id === "panelInvalid") {
-        const box2 = document.getElementById("debugBox2");
-        if (box2) box2.textContent = reason ?? "no reason given";
-      }
     }
-
     function showError(msg) {
       const b = document.getElementById("errorBanner");
       b.textContent = msg; b.classList.add("visible");
@@ -239,61 +243,26 @@
       }
     };
 
-    // ── Main ──────────────────────────────────────────────────────────────────
+    // ── Session detection ─────────────────────────────────────────────────────
     (async () => {
-      // Log the raw URL info
-      debug("href: " + window.location.href);
-      debug("hash: " + window.location.hash);
-      debug("search: " + window.location.search);
-
-      // Parse hash — handle both # and #/ prefixes
       const rawHash = window.location.hash.replace(/^#\/?/, "");
-      debug("rawHash: " + rawHash);
-
       const params = new URLSearchParams(rawHash);
       const accessToken  = params.get("access_token");
       const refreshToken = params.get("refresh_token") ?? "";
       const type         = params.get("type");
       const errorCode    = params.get("error_code");
-      const errorDesc    = params.get("error_description");
 
-      debug("access_token: " + (accessToken ? accessToken.slice(0, 20) + "…" : "MISSING"));
-      debug("refresh_token: " + (refreshToken ? refreshToken.slice(0, 10) + "…" : "MISSING"));
-      debug("type: " + type);
-      debug("error_code: " + errorCode);
-      debug("error_description: " + errorDesc);
+      if (errorCode)       { showPanel("panelInvalid"); return; }
+      if (!accessToken)    { showPanel("panelInvalid"); return; }
+      if (type !== "recovery") { showPanel("panelInvalid"); return; }
 
-      // Check for Supabase error in the hash (e.g. expired link)
-      if (errorCode) {
-        showPanel("panelInvalid", `Supabase error: ${errorCode} — ${errorDesc}`);
-        return;
-      }
-
-      if (!accessToken) {
-        showPanel("panelInvalid", "No access_token found in URL hash");
-        return;
-      }
-
-      if (type !== "recovery") {
-        showPanel("panelInvalid", `type is "${type}", expected "recovery"`);
-        return;
-      }
-
-      debug("Calling setSession…");
       const { data, error } = await supabase.auth.setSession({
         access_token:  accessToken,
         refresh_token: refreshToken,
       });
 
-      debug("setSession data.session: " + !!data?.session);
-      debug("setSession error: " + (error?.message ?? "none"));
+      if (error || !data?.session) { showPanel("panelInvalid"); return; }
 
-      if (error || !data?.session) {
-        showPanel("panelInvalid", `setSession failed: ${error?.message ?? "no session returned"}`);
-        return;
-      }
-
-      debug("✅ Session OK — showing form");
       showPanel("panelForm");
     })();
   </script>
