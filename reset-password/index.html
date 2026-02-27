@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Aloc</title>
+  <title>Aloc — Reset Password</title>
   <link rel="icon" type="image/png" href="https://bvsakonhetotdogbnnhh.supabase.co/storage/v1/object/public/images/icon.png" sizes="32x32" />
   <link rel="shortcut icon" href="https://bvsakonhetotdogbnnhh.supabase.co/storage/v1/object/public/images/icon.png" />
   <style>
@@ -124,12 +124,12 @@
 
     <div class="body">
 
-      <!-- Loading panel (default while we check session) -->
+      <!-- Loading -->
       <div class="panel active" id="panelLoading">
         <p style="color:var(--muted);font-weight:600;font-size:15px;margin:0;">Verifying your link…</p>
       </div>
 
-      <!-- Form panel -->
+      <!-- Form -->
       <div class="panel" id="panelForm">
         <h1>Choose a new password</h1>
         <p class="lead">Enter a new password for your Aloc account.</p>
@@ -165,7 +165,7 @@
         <button class="submitBtn" id="submitBtn" onclick="handleSubmit()">Reset Password</button>
       </div>
 
-      <!-- Success panel -->
+      <!-- Success -->
       <div class="panel" id="panelSuccess">
         <div class="successIcon">
           <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#2e7d52" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
@@ -176,7 +176,7 @@
         <p class="successMsg">Your password has been reset successfully.<br /><br />You can now return to the Aloc app and log in with your new password.</p>
       </div>
 
-      <!-- Invalid link panel -->
+      <!-- Invalid -->
       <div class="panel" id="panelInvalid">
         <h1>Link expired</h1>
         <p class="invalidMsg">This password reset link is invalid or has expired. Please go back to the app and request a new one.</p>
@@ -186,20 +186,16 @@
   </div>
 
   <script type="module">
-    import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
+    import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
 
     const SUPABASE_URL      = "https://bvsakonhetotdogbnnhh.supabase.co";
     const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY";
 
-    const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
-      auth: {
-        detectSessionFromUrl: true,
-        persistSession: false,
-        autoRefreshToken: false,
-      }
-    });
+    // ✅ No custom auth options — let Supabase handle everything by default.
+    // persistSession defaults to true, which is required for detectSessionFromUrl
+    // to properly process the #access_token hash and fire PASSWORD_RECOVERY.
+    const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-    // ── Helpers ──────────────────────────────────────────────────────────────
     function showPanel(id) {
       document.querySelectorAll(".panel").forEach(p => p.classList.remove("active"));
       document.getElementById(id).classList.add("active");
@@ -255,56 +251,32 @@
       }
     };
 
-    // ── Session detection ────────────────────────────────────────────────────
-    // Strategy: show "Verifying…" while we wait for Supabase to fire an auth
-    // event. Only switch to "Link expired" if we explicitly get a bad event.
-    // Never use a timeout — it was causing false "expired" during typing.
-    (async () => {
-      const hash   = new URLSearchParams(window.location.hash.replace("#", ""));
-      const search = new URLSearchParams(window.location.search);
+    // ── Session detection ─────────────────────────────────────────────────────
+    // With default settings, Supabase automatically parses the #access_token
+    // from the URL hash and fires PASSWORD_RECOVERY (not SIGNED_IN) for reset links.
+    // INITIAL_SESSION fires first — we ignore it and wait for PASSWORD_RECOVERY.
+    supabase.auth.onAuthStateChange((event, session) => {
+      console.log("auth event:", event, !!session);
 
-      // No token at all — invalid page visit
-      if (!hash.get("access_token") && !search.get("code")) {
+      if (event === "PASSWORD_RECOVERY") {
+        // ✅ This is the correct event for reset links — show the form
+        showPanel("panelForm");
+      } else if (event === "INITIAL_SESSION") {
+        // Fires first on every page load — ignore it, wait for PASSWORD_RECOVERY
+      } else if (event === "SIGNED_IN") {
+        // Should not fire for recovery links, but handle just in case
+        if (session) showPanel("panelForm");
+      }
+    });
+
+    // Fallback: if no PASSWORD_RECOVERY fires within 6s, the link is invalid
+    setTimeout(() => {
+      const isStillLoading = document.getElementById("panelLoading").classList.contains("active");
+      if (isStillLoading) {
         showPanel("panelInvalid");
         document.getElementById("headerSub").textContent = "Link Expired";
-        return;
       }
-
-      // PKCE code flow
-      if (search.get("code")) {
-        const { error } = await supabase.auth.exchangeCodeForSession(search.get("code"));
-        if (error) {
-          showPanel("panelInvalid");
-          document.getElementById("headerSub").textContent = "Link Expired";
-        } else {
-          showPanel("panelForm");
-        }
-        return;
-      }
-
-      // Implicit flow — listen for Supabase auth events.
-      // PASSWORD_RECOVERY = reset link, SIGNED_IN = session established.
-      // We show the form on either. We only show "expired" on explicit failure.
-      supabase.auth.onAuthStateChange((event, session) => {
-        console.log("auth event:", event, !!session);
-
-        if (event === "PASSWORD_RECOVERY" || event === "SIGNED_IN") {
-          if (session) {
-            showPanel("panelForm");
-          } else {
-            showPanel("panelInvalid");
-            document.getElementById("headerSub").textContent = "Link Expired";
-          }
-        } else if (event === "SIGNED_OUT") {
-          // Only treat as expired if we never showed the form
-          const formActive = document.getElementById("panelForm").classList.contains("active");
-          if (!formActive) {
-            showPanel("panelInvalid");
-            document.getElementById("headerSub").textContent = "Link Expired";
-          }
-        }
-      });
-    })();
+    }, 6000);
   </script>
 </body>
 </html>
