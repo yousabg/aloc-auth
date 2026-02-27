@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Aloc</title>
+  <title>Aloc — Reset Password</title>
   <link rel="icon" type="image/png" href="https://bvsakonhetotdogbnnhh.supabase.co/storage/v1/object/public/images/icon.png" sizes="32x32" />
   <link rel="shortcut icon" href="https://bvsakonhetotdogbnnhh.supabase.co/storage/v1/object/public/images/icon.png" />
   <style>
@@ -46,186 +46,75 @@
       gap: 18px;
     }
     .logoBox {
-      width: 64px;
-      height: 64px;
-      border-radius: 18px;
-      background: var(--brown);
-      display: grid;
-      place-items: center;
+      width: 64px; height: 64px; border-radius: 18px;
+      background: var(--brown); display: grid; place-items: center;
       border: 1px solid rgba(255, 255, 255, 0.2);
     }
-    .logoBox img {
-      width: 38px;
-      height: 38px;
-      object-fit: contain;
-    }
+    .logoBox img { width: 38px; height: 38px; object-fit: contain; }
     .brand { color: white; }
-    .brand .name {
-      font-weight: 900;
-      font-size: 20px;
-      letter-spacing: 0.2px;
-    }
-    .brand .sub {
-      margin-top: 4px;
-      font-weight: 700;
-      font-size: 12px;
-      opacity: 0.85;
-    }
+    .brand .name { font-weight: 900; font-size: 20px; letter-spacing: 0.2px; }
+    .brand .sub { margin-top: 4px; font-weight: 700; font-size: 12px; opacity: 0.85; }
     .body { padding: 32px; }
+    h1 { margin: 0 0 10px; font-size: 24px; font-weight: 900; color: var(--brown); letter-spacing: 0.2px; }
+    p.lead { margin: 0 0 26px; font-size: 15px; line-height: 1.6; color: var(--muted); font-weight: 600; }
 
-    h1 {
-      margin: 0 0 10px;
-      font-size: 24px;
-      font-weight: 900;
-      color: var(--brown);
-      letter-spacing: 0.2px;
-    }
-    .lead {
-      margin: 0 0 26px;
-      font-size: 15px;
-      line-height: 1.6;
-      color: var(--muted);
-      font-weight: 600;
-    }
-
-    /* Input pill */
     .inputWrap {
-      position: relative;
-      display: flex;
-      align-items: center;
-      background: var(--input-bg);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 0 14px;
-      height: 54px;
-      margin-bottom: 14px;
-      transition: border-color 0.15s;
+      position: relative; display: flex; align-items: center;
+      background: var(--input-bg); border: 1px solid var(--border);
+      border-radius: 14px; padding: 0 14px; height: 54px;
+      margin-bottom: 14px; transition: border-color 0.15s;
     }
-    .inputWrap:focus-within {
-      border-color: var(--brown);
-    }
-    .inputWrap svg {
-      flex-shrink: 0;
-      margin-right: 10px;
-      opacity: 0.55;
-    }
+    .inputWrap:focus-within { border-color: var(--brown); }
+    .inputWrap svg { flex-shrink: 0; margin-right: 10px; opacity: 0.55; }
     .inputWrap input {
-      flex: 1;
-      border: none;
-      background: transparent;
-      font-size: 16px;
-      color: var(--brown);
-      font-family: inherit;
-      font-weight: 600;
-      outline: none;
-      padding: 0;
+      flex: 1; border: none; background: transparent;
+      font-size: 16px; color: var(--brown); font-family: inherit;
+      font-weight: 600; outline: none; padding: 0;
     }
-    .inputWrap input::placeholder {
-      color: var(--muted-light);
-      font-weight: 600;
-    }
+    .inputWrap input::placeholder { color: var(--muted-light); font-weight: 600; }
     .toggleBtn {
-      background: none;
-      border: none;
-      cursor: pointer;
-      padding: 6px 0 6px 12px;
-      display: grid;
-      place-items: center;
-      opacity: 0.55;
-      transition: opacity 0.15s;
+      background: none; border: none; cursor: pointer;
+      padding: 6px 0 6px 12px; display: grid; place-items: center;
+      opacity: 0.55; transition: opacity 0.15s;
     }
     .toggleBtn:hover { opacity: 0.9; }
+    .helper { font-size: 12px; font-weight: 700; color: var(--error); margin: -8px 0 14px 4px; min-height: 16px; }
 
-    /* Mismatch helper */
-    .helper {
-      font-size: 12px;
-      font-weight: 700;
-      color: var(--error);
-      margin: -8px 0 14px 4px;
-      min-height: 16px;
-    }
-
-    /* Submit button */
     .submitBtn {
-      width: 100%;
-      height: 54px;
-      border-radius: 14px;
-      background: var(--brown);
-      color: #fff;
-      border: none;
-      font-family: inherit;
-      font-size: 17px;
-      font-weight: 900;
-      letter-spacing: 0.3px;
-      cursor: pointer;
-      margin-top: 6px;
+      width: 100%; height: 54px; border-radius: 14px;
+      background: var(--brown); color: #fff; border: none;
+      font-family: inherit; font-size: 17px; font-weight: 900;
+      letter-spacing: 0.3px; cursor: pointer; margin-top: 6px;
       transition: opacity 0.15s;
     }
     .submitBtn:hover:not(:disabled) { opacity: 0.88; }
     .submitBtn:disabled { opacity: 0.5; cursor: default; }
 
-    /* State panels */
     .panel { display: none; }
     .panel.active { display: block; }
 
-    /* Success state */
     .successIcon {
-      width: 64px;
-      height: 64px;
-      border-radius: 50%;
+      width: 64px; height: 64px; border-radius: 50%;
       background: rgba(46, 125, 82, 0.1);
-      display: grid;
-      place-items: center;
-      margin: 0 auto 18px;
+      display: grid; place-items: center; margin: 0 auto 18px;
     }
-    .successTitle {
-      font-size: 24px;
-      font-weight: 900;
-      color: var(--brown);
-      margin: 0 0 10px;
-      text-align: center;
-    }
-    .successMsg {
-      font-size: 15px;
-      line-height: 1.6;
-      color: var(--muted);
-      font-weight: 600;
-      text-align: center;
-      margin: 0;
-    }
+    .successTitle { font-size: 24px; font-weight: 900; color: var(--brown); margin: 0 0 10px; text-align: center; }
+    .successMsg { font-size: 15px; line-height: 1.6; color: var(--muted); font-weight: 600; text-align: center; margin: 0; }
 
-    /* Error banner */
     .errorBanner {
-      background: rgba(200, 60, 60, 0.08);
-      border: 1px solid rgba(200, 60, 60, 0.2);
-      border-radius: 12px;
-      padding: 12px 14px;
-      font-size: 13px;
-      font-weight: 700;
-      color: var(--error);
-      margin-bottom: 18px;
-      display: none;
+      background: rgba(200, 60, 60, 0.08); border: 1px solid rgba(200, 60, 60, 0.2);
+      border-radius: 12px; padding: 12px 14px; font-size: 13px; font-weight: 700;
+      color: var(--error); margin-bottom: 18px; display: none;
     }
     .errorBanner.visible { display: block; }
-
-    /* Invalid link state */
-    .invalidMsg {
-      font-size: 15px;
-      line-height: 1.6;
-      color: var(--muted);
-      font-weight: 600;
-      margin: 0;
-    }
+    .invalidMsg { font-size: 15px; line-height: 1.6; color: var(--muted); font-weight: 600; margin: 0; }
   </style>
 </head>
 <body>
   <div class="card">
     <div class="header">
       <div class="logoBox">
-        <img
-          src="https://bvsakonhetotdogbnnhh.supabase.co/storage/v1/object/public/images/icon.png"
-          alt="Aloc Logo"
-        />
+        <img src="https://bvsakonhetotdogbnnhh.supabase.co/storage/v1/object/public/images/icon.png" alt="Aloc Logo" />
       </div>
       <div class="brand">
         <div class="name">Aloc</div>
@@ -242,33 +131,27 @@
 
         <div class="errorBanner" id="errorBanner"></div>
 
-        <!-- New password -->
         <div class="inputWrap">
-          <!-- lock icon -->
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#3a2a23" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
             <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
           </svg>
           <input type="password" id="password" placeholder="New password" autocomplete="new-password" />
-          <button class="toggleBtn" type="button" onclick="toggleVisibility('password', this)" aria-label="Toggle password">
+          <button class="toggleBtn" type="button" onclick="toggleVisibility('password')" aria-label="Toggle password">
             <svg id="eyePassword" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#3a2a23" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
-              <circle cx="12" cy="12" r="3"/>
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
             </svg>
           </button>
         </div>
 
-        <!-- Confirm password -->
         <div class="inputWrap">
-          <!-- shield icon -->
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#3a2a23" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
           </svg>
           <input type="password" id="confirmPassword" placeholder="Confirm password" autocomplete="new-password" oninput="checkMismatch()" />
-          <button class="toggleBtn" type="button" onclick="toggleVisibility('confirmPassword', this)" aria-label="Toggle confirm password">
+          <button class="toggleBtn" type="button" onclick="toggleVisibility('confirmPassword')" aria-label="Toggle confirm password">
             <svg id="eyeConfirm" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#3a2a23" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
-              <circle cx="12" cy="12" r="3"/>
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
             </svg>
           </button>
         </div>
@@ -300,55 +183,33 @@
   <script type="module">
     import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
 
-    const SUPABASE_URL = "https://bvsakonhetotdogbnnhh.supabase.co";
+    const SUPABASE_URL      = "https://bvsakonhetotdogbnnhh.supabase.co";
     const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY";
 
-    const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    // detectSessionFromUrl automatically parses #access_token from the hash
+    const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+      auth: {
+        detectSessionFromUrl: true,
+        persistSession: false,
+        autoRefreshToken: false,
+      }
+    });
 
+    // ── Helpers ──────────────────────────────────────────────────────────────
     function showPanel(id) {
       document.querySelectorAll(".panel").forEach(p => p.classList.remove("active"));
       document.getElementById(id).classList.add("active");
     }
-
     function showError(msg) {
-      const banner = document.getElementById("errorBanner");
-      banner.textContent = msg;
-      banner.classList.add("visible");
+      const b = document.getElementById("errorBanner");
+      b.textContent = msg;
+      b.classList.add("visible");
     }
-
     function hideError() {
       document.getElementById("errorBanner").classList.remove("visible");
     }
 
-    // ── Parse session from URL ───────────────────────────────────────────────
-    // Supabase PKCE flow puts a `code` in the query string.
-    // Older implicit flow puts access_token in the hash — we handle both.
-    const params = new URLSearchParams(window.location.search);
-    const code = params.get("code");
-
-    const hash = new URLSearchParams(window.location.hash.replace("#", ""));
-    const accessToken = hash.get("access_token");
-    const refreshToken = hash.get("refresh_token");
-    const type = hash.get("type");
-
-    if (code) {
-      // PKCE flow — exchange the code for a session
-      const { error } = await supabase.auth.exchangeCodeForSession(code);
-      if (error) {
-        console.log("exchangeCodeForSession error:", error.message);
-        showPanel("panelInvalid");
-        document.getElementById("headerSub").textContent = "Link Expired";
-      }
-    } else if (accessToken && type === "recovery") {
-      // Implicit flow fallback
-      await supabase.auth.setSession({ access_token: accessToken, refresh_token: refreshToken ?? "" });
-    } else {
-      showPanel("panelInvalid");
-      document.getElementById("headerSub").textContent = "Link Expired";
-    }
-
-    // ── Toggle password visibility ──────────────────────────────────────────
-    window.toggleVisibility = (inputId, btn) => {
+    window.toggleVisibility = (inputId) => {
       const input = document.getElementById(inputId);
       const isHidden = input.type === "password";
       input.type = isHidden ? "text" : "password";
@@ -358,40 +219,94 @@
         : `<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>`;
     };
 
-    // ── Mismatch check ──────────────────────────────────────────────────────
     window.checkMismatch = () => {
       const pw = document.getElementById("password").value;
       const cp = document.getElementById("confirmPassword").value;
-      const helper = document.getElementById("mismatchHelper");
-      helper.textContent = cp.length > 0 && pw !== cp ? "Passwords don't match." : "";
+      document.getElementById("mismatchHelper").textContent =
+        cp.length > 0 && pw !== cp ? "Passwords don't match." : "";
     };
 
-    // ── Submit ──────────────────────────────────────────────────────────────
     window.handleSubmit = async () => {
       hideError();
-
-      const pw = document.getElementById("password").value;
-      const cp = document.getElementById("confirmPassword").value;
+      const pw  = document.getElementById("password").value;
+      const cp  = document.getElementById("confirmPassword").value;
       const btn = document.getElementById("submitBtn");
 
-      if (!pw) { showError("Please enter a new password."); return; }
+      if (!pw)           { showError("Please enter a new password."); return; }
       if (pw.length < 6) { showError("Password must be at least 6 characters."); return; }
-      if (pw !== cp) { showError("Passwords don't match."); return; }
+      if (pw !== cp)     { showError("Passwords don't match."); return; }
 
-      btn.disabled = true;
+      btn.disabled    = true;
       btn.textContent = "Updating…";
 
       const { error } = await supabase.auth.updateUser({ password: pw });
 
       if (error) {
         showError(error.message ?? "Something went wrong. Please try again.");
-        btn.disabled = false;
+        btn.disabled    = false;
         btn.textContent = "Reset Password";
       } else {
         showPanel("panelSuccess");
         document.getElementById("headerSub").textContent = "Password Updated";
       }
     };
+
+    // ── Session detection ────────────────────────────────────────────────────
+    // Supabase fires PASSWORD_RECOVERY when it successfully parses the hash.
+    // We wait for that event. If it never comes, we fall back to getSession().
+    (async () => {
+      const hash   = new URLSearchParams(window.location.hash.replace("#", ""));
+      const search = new URLSearchParams(window.location.search);
+
+      if (!hash.get("access_token") && !search.get("code")) {
+        showPanel("panelInvalid");
+        document.getElementById("headerSub").textContent = "Link Expired";
+        return;
+      }
+
+      // Handle PKCE code flow
+      if (search.get("code")) {
+        const { error } = await supabase.auth.exchangeCodeForSession(search.get("code"));
+        if (error) {
+          showPanel("panelInvalid");
+          document.getElementById("headerSub").textContent = "Link Expired";
+        }
+        return;
+      }
+
+      // Implicit flow — wait for Supabase to fire PASSWORD_RECOVERY
+      let resolved = false;
+
+      const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+        if (resolved) return;
+        console.log("auth event:", event, !!session);
+
+        if (event === "PASSWORD_RECOVERY" || (event === "SIGNED_IN" && session)) {
+          resolved = true;
+          subscription.unsubscribe();
+          // Session is live — form stays visible, ready to submit
+        } else if (event === "SIGNED_OUT") {
+          resolved = true;
+          subscription.unsubscribe();
+          showPanel("panelInvalid");
+          document.getElementById("headerSub").textContent = "Link Expired";
+        }
+      });
+
+      // Fallback: after 5s check session directly in case the event already fired
+      // before our listener registered
+      setTimeout(async () => {
+        if (resolved) return;
+        resolved = true;
+        subscription.unsubscribe();
+
+        const { data: { session } } = await supabase.auth.getSession();
+        if (!session) {
+          showPanel("panelInvalid");
+          document.getElementById("headerSub").textContent = "Link Expired";
+        }
+      }, 5000);
+    })();
   </script>
 </body>
 </html>
