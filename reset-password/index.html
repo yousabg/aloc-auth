@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Aloc — Reset Password</title>
+  <title>Aloc</title>
   <link rel="icon" type="image/png" href="https://bvsakonhetotdogbnnhh.supabase.co/storage/v1/object/public/images/icon.png" sizes="32x32" />
   <link rel="shortcut icon" href="https://bvsakonhetotdogbnnhh.supabase.co/storage/v1/object/public/images/icon.png" />
   <style>
@@ -124,8 +124,13 @@
 
     <div class="body">
 
+      <!-- Loading panel (default while we check session) -->
+      <div class="panel active" id="panelLoading">
+        <p style="color:var(--muted);font-weight:600;font-size:15px;margin:0;">Verifying your link…</p>
+      </div>
+
       <!-- Form panel -->
-      <div class="panel active" id="panelForm">
+      <div class="panel" id="panelForm">
         <h1>Choose a new password</h1>
         <p class="lead">Enter a new password for your Aloc account.</p>
 
@@ -186,7 +191,6 @@
     const SUPABASE_URL      = "https://bvsakonhetotdogbnnhh.supabase.co";
     const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY";
 
-    // detectSessionFromUrl automatically parses #access_token from the hash
     const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
       auth: {
         detectSessionFromUrl: true,
@@ -252,60 +256,54 @@
     };
 
     // ── Session detection ────────────────────────────────────────────────────
-    // Supabase fires PASSWORD_RECOVERY when it successfully parses the hash.
-    // We wait for that event. If it never comes, we fall back to getSession().
+    // Strategy: show "Verifying…" while we wait for Supabase to fire an auth
+    // event. Only switch to "Link expired" if we explicitly get a bad event.
+    // Never use a timeout — it was causing false "expired" during typing.
     (async () => {
       const hash   = new URLSearchParams(window.location.hash.replace("#", ""));
       const search = new URLSearchParams(window.location.search);
 
+      // No token at all — invalid page visit
       if (!hash.get("access_token") && !search.get("code")) {
         showPanel("panelInvalid");
         document.getElementById("headerSub").textContent = "Link Expired";
         return;
       }
 
-      // Handle PKCE code flow
+      // PKCE code flow
       if (search.get("code")) {
         const { error } = await supabase.auth.exchangeCodeForSession(search.get("code"));
         if (error) {
           showPanel("panelInvalid");
           document.getElementById("headerSub").textContent = "Link Expired";
+        } else {
+          showPanel("panelForm");
         }
         return;
       }
 
-      // Implicit flow — wait for Supabase to fire PASSWORD_RECOVERY
-      let resolved = false;
-
-      const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-        if (resolved) return;
+      // Implicit flow — listen for Supabase auth events.
+      // PASSWORD_RECOVERY = reset link, SIGNED_IN = session established.
+      // We show the form on either. We only show "expired" on explicit failure.
+      supabase.auth.onAuthStateChange((event, session) => {
         console.log("auth event:", event, !!session);
 
-        if (event === "PASSWORD_RECOVERY" || (event === "SIGNED_IN" && session)) {
-          resolved = true;
-          subscription.unsubscribe();
-          // Session is live — form stays visible, ready to submit
+        if (event === "PASSWORD_RECOVERY" || event === "SIGNED_IN") {
+          if (session) {
+            showPanel("panelForm");
+          } else {
+            showPanel("panelInvalid");
+            document.getElementById("headerSub").textContent = "Link Expired";
+          }
         } else if (event === "SIGNED_OUT") {
-          resolved = true;
-          subscription.unsubscribe();
-          showPanel("panelInvalid");
-          document.getElementById("headerSub").textContent = "Link Expired";
+          // Only treat as expired if we never showed the form
+          const formActive = document.getElementById("panelForm").classList.contains("active");
+          if (!formActive) {
+            showPanel("panelInvalid");
+            document.getElementById("headerSub").textContent = "Link Expired";
+          }
         }
       });
-
-      // Fallback: after 5s check session directly in case the event already fired
-      // before our listener registered
-      setTimeout(async () => {
-        if (resolved) return;
-        resolved = true;
-        subscription.unsubscribe();
-
-        const { data: { session } } = await supabase.auth.getSession();
-        if (!session) {
-          showPanel("panelInvalid");
-          document.getElementById("headerSub").textContent = "Link Expired";
-        }
-      }, 5000);
     })();
   </script>
 </body>
