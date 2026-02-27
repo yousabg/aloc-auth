@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Aloc — Reset Password</title>
+  <title>Aloc</title>
   <link rel="icon" type="image/png" href="https://bvsakonhetotdogbnnhh.supabase.co/storage/v1/object/public/images/icon.png" sizes="32x32" />
   <link rel="shortcut icon" href="https://bvsakonhetotdogbnnhh.supabase.co/storage/v1/object/public/images/icon.png" />
   <style>
@@ -320,19 +320,31 @@
       document.getElementById("errorBanner").classList.remove("visible");
     }
 
-    // ── Parse session from URL hash ─────────────────────────────────────────
-    // Supabase puts access_token + type=recovery in the hash after redirect
+    // ── Parse session from URL ───────────────────────────────────────────────
+    // Supabase PKCE flow puts a `code` in the query string.
+    // Older implicit flow puts access_token in the hash — we handle both.
+    const params = new URLSearchParams(window.location.search);
+    const code = params.get("code");
+
     const hash = new URLSearchParams(window.location.hash.replace("#", ""));
     const accessToken = hash.get("access_token");
     const refreshToken = hash.get("refresh_token");
     const type = hash.get("type");
 
-    if (!accessToken || type !== "recovery") {
+    if (code) {
+      // PKCE flow — exchange the code for a session
+      const { error } = await supabase.auth.exchangeCodeForSession(code);
+      if (error) {
+        console.log("exchangeCodeForSession error:", error.message);
+        showPanel("panelInvalid");
+        document.getElementById("headerSub").textContent = "Link Expired";
+      }
+    } else if (accessToken && type === "recovery") {
+      // Implicit flow fallback
+      await supabase.auth.setSession({ access_token: accessToken, refresh_token: refreshToken ?? "" });
+    } else {
       showPanel("panelInvalid");
       document.getElementById("headerSub").textContent = "Link Expired";
-    } else {
-      // Set the session so updateUser() works
-      supabase.auth.setSession({ access_token: accessToken, refresh_token: refreshToken ?? "" });
     }
 
     // ── Toggle password visibility ──────────────────────────────────────────
