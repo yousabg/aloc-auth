@@ -3,9 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Aloc</title>
+  <title>Aloc — Reset Password</title>
   <link rel="icon" type="image/png" href="https://bvsakonhetotdogbnnhh.supabase.co/storage/v1/object/public/images/icon.png" sizes="32x32" />
-  <link rel="shortcut icon" href="https://bvsakonhetotdogbnnhh.supabase.co/storage/v1/object/public/images/icon.png" />
   <style>
     :root {
       --background: #f6f1ed;
@@ -45,7 +44,7 @@
     }
     .logoBox img { width: 38px; height: 38px; object-fit: contain; }
     .brand { color: white; }
-    .brand .name { font-weight: 900; font-size: 20px; letter-spacing: 0.2px; }
+    .brand .name { font-weight: 900; font-size: 20px; }
     .brand .sub { margin-top: 4px; font-weight: 700; font-size: 12px; opacity: 0.85; }
     .body { padding: 32px; }
     h1 { margin: 0 0 10px; font-size: 24px; font-weight: 900; color: var(--brown); }
@@ -67,16 +66,14 @@
     .toggleBtn {
       background: none; border: none; cursor: pointer;
       padding: 6px 0 6px 12px; display: grid; place-items: center;
-      opacity: 0.55; transition: opacity 0.15s;
+      opacity: 0.55;
     }
-    .toggleBtn:hover { opacity: 0.9; }
     .helper { font-size: 12px; font-weight: 700; color: var(--error); margin: -8px 0 14px 4px; min-height: 16px; }
     .submitBtn {
       width: 100%; height: 54px; border-radius: 14px;
       background: var(--brown); color: #fff; border: none;
       font-family: inherit; font-size: 17px; font-weight: 900;
-      letter-spacing: 0.3px; cursor: pointer; margin-top: 6px;
-      transition: opacity 0.15s;
+      cursor: pointer; margin-top: 6px; transition: opacity 0.15s;
     }
     .submitBtn:hover:not(:disabled) { opacity: 0.88; }
     .submitBtn:disabled { opacity: 0.5; cursor: default; }
@@ -96,6 +93,12 @@
     }
     .errorBanner.visible { display: block; }
     .invalidMsg { font-size: 15px; line-height: 1.6; color: var(--muted); font-weight: 600; margin: 0; }
+    /* debug box */
+    #debugBox {
+      margin-top: 18px; padding: 12px; background: #f0e8e3;
+      border-radius: 10px; font-size: 11px; font-family: monospace;
+      color: #3a2a23; line-height: 1.6; word-break: break-all;
+    }
   </style>
 </head>
 <body>
@@ -113,18 +116,17 @@
     <div class="body">
 
       <div class="panel active" id="panelLoading">
-        <p style="color:var(--muted);font-weight:600;font-size:15px;margin:0;">Verifying your link…</p>
+        <p style="color:var(--muted);font-weight:600;font-size:15px;margin:0 0 12px;">Verifying your link…</p>
+        <div id="debugBox">Loading…</div>
       </div>
 
       <div class="panel" id="panelForm">
         <h1>Choose a new password</h1>
         <p class="lead">Enter a new password for your Aloc account.</p>
         <div class="errorBanner" id="errorBanner"></div>
-
         <div class="inputWrap">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#3a2a23" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
-            <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
           </svg>
           <input type="password" id="password" placeholder="New password" autocomplete="new-password" />
           <button class="toggleBtn" type="button" onclick="toggleVisibility('password')">
@@ -133,7 +135,6 @@
             </svg>
           </button>
         </div>
-
         <div class="inputWrap">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#3a2a23" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
@@ -162,6 +163,7 @@
       <div class="panel" id="panelInvalid">
         <h1>Link expired</h1>
         <p class="invalidMsg">This password reset link is invalid or has expired. Please go back to the app and request a new one.</p>
+        <div id="debugBox2" style="margin-top:18px;padding:12px;background:#f0e8e3;border-radius:10px;font-size:11px;font-family:monospace;color:#3a2a23;line-height:1.6;word-break:break-all;"></div>
       </div>
 
     </div>
@@ -170,34 +172,43 @@
   <script type="module">
     import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
 
-    const SUPABASE_URL      = "https://bvsakonhetotdogbnnhh.supabase.co";
-    const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY";
+    const EXPO_PUBLIC_SUPABASE_URL=https://bvsakonhetotdogbnnhh.supabase.co
+    const EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY=sb_publishable_DqDgzOahi7ExN8Y44UFfXw_lVhaRK58
 
-    // Disable detectSessionFromUrl so Supabase does NOT auto-consume the hash.
-    // We parse and set the session manually below so we have full control.
-    const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+    const supabase = createClient(EXPO_PUBLIC_SUPABASE_URL, EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY, {
       auth: { detectSessionFromUrl: false }
     });
 
-    function showPanel(id) {
+    const debug = (msg) => {
+      console.log(msg);
+      const box = document.getElementById("debugBox");
+      if (box) box.innerHTML += "<br>" + msg;
+    };
+
+    function showPanel(id, reason) {
+      console.log("showPanel:", id, reason ?? "");
       document.querySelectorAll(".panel").forEach(p => p.classList.remove("active"));
       document.getElementById(id).classList.add("active");
+      if (id === "panelInvalid") {
+        const box2 = document.getElementById("debugBox2");
+        if (box2) box2.textContent = reason ?? "no reason given";
+      }
     }
+
     function showError(msg) {
       const b = document.getElementById("errorBanner");
-      b.textContent = msg;
-      b.classList.add("visible");
+      b.textContent = msg; b.classList.add("visible");
     }
     function hideError() {
       document.getElementById("errorBanner").classList.remove("visible");
     }
 
-    window.toggleVisibility = (inputId) => {
-      const input = document.getElementById(inputId);
-      const isHidden = input.type === "password";
-      input.type = isHidden ? "text" : "password";
-      const eyeId = inputId === "password" ? "eyePassword" : "eyeConfirm";
-      document.getElementById(eyeId).innerHTML = isHidden
+    window.toggleVisibility = (id) => {
+      const input = document.getElementById(id);
+      const hidden = input.type === "password";
+      input.type = hidden ? "text" : "password";
+      const eyeId = id === "password" ? "eyePassword" : "eyeConfirm";
+      document.getElementById(eyeId).innerHTML = hidden
         ? `<line x1="1" y1="1" x2="23" y2="23"/><path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"/><path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 11 7 11 7a13.16 13.16 0 0 1-1.67 2.68"/><path d="M6.61 6.61A13.526 13.526 0 0 0 1 12s4 7 11 7a9.74 9.74 0 0 0 5.39-1.61"/>`
         : `<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>`;
     };
@@ -214,64 +225,75 @@
       const pw  = document.getElementById("password").value;
       const cp  = document.getElementById("confirmPassword").value;
       const btn = document.getElementById("submitBtn");
-
       if (!pw)           { showError("Please enter a new password."); return; }
       if (pw.length < 6) { showError("Password must be at least 6 characters."); return; }
       if (pw !== cp)     { showError("Passwords don't match."); return; }
-
-      btn.disabled    = true;
-      btn.textContent = "Updating…";
-
+      btn.disabled = true; btn.textContent = "Updating…";
       const { error } = await supabase.auth.updateUser({ password: pw });
-
       if (error) {
-        showError(error.message ?? "Something went wrong. Please try again.");
-        btn.disabled    = false;
-        btn.textContent = "Reset Password";
+        showError(error.message ?? "Something went wrong.");
+        btn.disabled = false; btn.textContent = "Reset Password";
       } else {
         showPanel("panelSuccess");
         document.getElementById("headerSub").textContent = "Password Updated";
       }
     };
 
-    // ── Manually parse the hash and set the session ───────────────────────────
-    // We do this ourselves because detectSessionFromUrl is unreliable when
-    // localStorage is blocked or unavailable (which causes INITIAL_SESSION false).
+    // ── Main ──────────────────────────────────────────────────────────────────
     (async () => {
-      const hash = new URLSearchParams(window.location.hash.replace(/^#/, ""));
-      const accessToken  = hash.get("access_token");
-      const refreshToken = hash.get("refresh_token") ?? "";
-      const type         = hash.get("type");
+      // Log the raw URL info
+      debug("href: " + window.location.href);
+      debug("hash: " + window.location.hash);
+      debug("search: " + window.location.search);
 
-      console.log("Hash type:", type, "Has token:", !!accessToken);
+      // Parse hash — handle both # and #/ prefixes
+      const rawHash = window.location.hash.replace(/^#\/?/, "");
+      debug("rawHash: " + rawHash);
+
+      const params = new URLSearchParams(rawHash);
+      const accessToken  = params.get("access_token");
+      const refreshToken = params.get("refresh_token") ?? "";
+      const type         = params.get("type");
+      const errorCode    = params.get("error_code");
+      const errorDesc    = params.get("error_description");
+
+      debug("access_token: " + (accessToken ? accessToken.slice(0, 20) + "…" : "MISSING"));
+      debug("refresh_token: " + (refreshToken ? refreshToken.slice(0, 10) + "…" : "MISSING"));
+      debug("type: " + type);
+      debug("error_code: " + errorCode);
+      debug("error_description: " + errorDesc);
+
+      // Check for Supabase error in the hash (e.g. expired link)
+      if (errorCode) {
+        showPanel("panelInvalid", `Supabase error: ${errorCode} — ${errorDesc}`);
+        return;
+      }
 
       if (!accessToken) {
-        showPanel("panelInvalid");
-        document.getElementById("headerSub").textContent = "Link Expired";
+        showPanel("panelInvalid", "No access_token found in URL hash");
         return;
       }
 
       if (type !== "recovery") {
-        showPanel("panelInvalid");
-        document.getElementById("headerSub").textContent = "Link Expired";
+        showPanel("panelInvalid", `type is "${type}", expected "recovery"`);
         return;
       }
 
-      // Manually set the session — this does NOT require localStorage
+      debug("Calling setSession…");
       const { data, error } = await supabase.auth.setSession({
         access_token:  accessToken,
         refresh_token: refreshToken,
       });
 
-      console.log("setSession result:", !!data?.session, error?.message);
+      debug("setSession data.session: " + !!data?.session);
+      debug("setSession error: " + (error?.message ?? "none"));
 
       if (error || !data?.session) {
-        showPanel("panelInvalid");
-        document.getElementById("headerSub").textContent = "Link Expired";
+        showPanel("panelInvalid", `setSession failed: ${error?.message ?? "no session returned"}`);
         return;
       }
 
-      // ✅ Session is live — show the form
+      debug("✅ Session OK — showing form");
       showPanel("panelForm");
     })();
   </script>
